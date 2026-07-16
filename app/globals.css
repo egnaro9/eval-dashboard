@@ -40,6 +40,8 @@ code { color: var(--accent); }
 .banner { margin: 1.25rem 0; padding: .8rem 1rem; border-radius: 8px; border: 1px solid var(--border); }
 .banner.ok { background: rgba(52, 211, 153, .1); border-color: var(--good); }
 .banner.bad { background: rgba(248, 113, 113, .1); border-color: var(--bad); }
+.banner.handoff { background: rgba(96, 165, 250, .1); border-color: var(--accent); }
+.banner.handoff a { color: var(--accent); }
 
 .cards-grid {
   display: grid;
