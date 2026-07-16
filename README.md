@@ -3,9 +3,14 @@
 [![ci](https://github.com/egnaro9/eval-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/egnaro9/eval-dashboard/actions/workflows/ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)](https://www.typescriptlang.org/)
+[![live demo](https://img.shields.io/badge/demo-live-f2a53c)](https://egnaro9.github.io/eval-dashboard/)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 **A Next.js + TypeScript dashboard that visualizes RAG evaluation runs and surfaces hallucinations at a glance.**
+
+### ▶ [Open the live dashboard](https://egnaro9.github.io/eval-dashboard/)
+
+No install, no clone — it's deployed from this repo on every push to `main`. You're looking at a real [rag-eval-lab](https://github.com/egnaro9/rag-eval-lab) run: 6 cases, and the red row is a **planted hallucination the eval harness caught**.
 
 The companion [rag-eval-lab](https://github.com/egnaro9/rag-eval-lab) produces an `eval_run.json`; numbers in a JSON file are hard to read. This dashboard turns one into metric cards, a per-case table, and a banner that calls out any **flagged (hallucinated) case** in red. It's a fully client-side **static export** — no server, no database — so it builds to plain files you can drop on GitHub Pages or S3.
 
@@ -62,6 +67,7 @@ Keeping the data-shaping logic in pure, React-free modules is deliberate: those 
 
 ## Design notes
 
+- **Deployed from the same build.** `output: "export"` + an Actions workflow publishes `out/` to GitHub Pages on every push; an opt-in `PAGES_BASE_PATH` supplies the project-site asset prefix so local dev and tests still build at the root.
 - **Why static export?** The dashboard only *reads* a JSON run — there's no server-side work to do. `output: "export"` yields a zero-runtime site that's cheap to host and impossible to break in production. It's also why the CI job runs `next build` (which type-checks) before the standalone `typecheck` — the build generates the App Router route types.
 - **Why a runtime validator in a typed app?** TypeScript types vanish at runtime; an *uploaded* file is untrusted. `parseEvalRun` is the boundary that turns `unknown` JSON into a typed `EvalRun` or a clear error — the same discipline you'd use on any external input.
 - **0 vulnerabilities.** Dependencies are pinned and a `postcss` override pulls the patched transitive version; the CI audit step is informational so a future upstream advisory never silently reddens the badge.
