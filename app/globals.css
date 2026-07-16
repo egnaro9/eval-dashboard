@@ -1,0 +1,71 @@
+:root {
+  --bg: #0b0e14;
+  --panel: #131824;
+  --border: #232a3a;
+  --text: #e6e9ef;
+  --muted: #8b94a7;
+  --good: #34d399;
+  --warn: #fbbf24;
+  --bad: #f87171;
+  --accent: #60a5fa;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.dashboard { max-width: 1000px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+h1 { margin: 0; font-size: 1.7rem; }
+.subtitle { color: var(--muted); margin: .25rem 0 0; }
+code { color: var(--accent); }
+
+.upload {
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  padding: .5rem .8rem;
+  border-radius: 8px;
+  font-size: .85rem;
+  white-space: nowrap;
+}
+.upload input { display: none; }
+
+.banner { margin: 1.25rem 0; padding: .8rem 1rem; border-radius: 8px; border: 1px solid var(--border); }
+.banner.ok { background: rgba(52, 211, 153, .1); border-color: var(--good); }
+.banner.bad { background: rgba(248, 113, 113, .1); border-color: var(--bad); }
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: .8rem;
+  margin: 1rem 0 2rem;
+}
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.card-label { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .03em; }
+.card-value { font-size: 1.6rem; font-weight: 650; margin-top: .3rem; }
+.tone-good .card-value, .tone-good.badge { color: var(--good); }
+.tone-warn .card-value, .tone-warn.badge { color: var(--warn); }
+.tone-bad .card-value, .tone-bad.badge { color: var(--bad); }
+
+table.cases { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.cases th, .cases td { text-align: left; padding: .6rem .5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+.cases th { color: var(--muted); font-weight: 600; font-size: .75rem; text-transform: uppercase; }
+.cases .q { font-weight: 550; max-width: 220px; }
+.cases .a { color: var(--muted); max-width: 320px; }
+.cases .retrieved { color: var(--accent); font-family: ui-monospace, monospace; font-size: .78rem; }
+.row-flagged { background: rgba(248, 113, 113, .07); }
+.note { color: var(--bad); font-size: .78rem; margin-top: .3rem; }
+
+.badge { font-family: ui-monospace, monospace; font-weight: 600; }
+.status.flagged { color: var(--bad); }
+.status.ok { color: var(--good); }
+
+footer { margin-top: 3rem; color: var(--muted); font-size: .85rem; }
+footer a { color: var(--accent); }
