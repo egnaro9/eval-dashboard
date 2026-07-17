@@ -72,29 +72,52 @@ table.cases { width: 100%; border-collapse: collapse; font-size: .9rem; }
 footer { margin-top: 3rem; color: var(--muted); font-size: .85rem; }
 footer a { color: var(--accent); }
 
-/* ---- stored runs (eval-history) ----
-   The only part of this dashboard that talks to a server. It sleeps on a free
-   tier, so the wake state is a first-class thing to render, not an edge case. */
-.history { margin: 28px 0 8px; border-top: 1px solid var(--line, #2a3439); padding-top: 22px; }
-.history-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.history-head h2 { margin: 0; }
-.history-head button {
-  font: inherit; font-size: 0.85rem; padding: 8px 14px; border-radius: 4px; cursor: pointer;
-  border: 1px solid var(--accent, #f2a53c); background: transparent; color: var(--accent, #f2a53c);
+/* eval-history's colour, matching its card, its diagram box, and its stage on
+   the stack page. The same project should be the same colour everywhere. */
+:root { --eh-pink: #f472b6; }
+
+/* ---- where does this run come from? ----
+   The upload button and the eval-history button answer the same question, so
+   they sit together. One reads a file; the other reaches a live Postgres. */
+.sources { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.source-btn {
+  cursor: pointer; font: inherit; font-size: .85rem; padding: .5rem .8rem;
+  border-radius: 8px; white-space: nowrap;
+  border: 1px solid var(--border); background: var(--panel); color: inherit;
+  transition: background .15s, border-color .15s;
 }
-.history-head button:disabled { opacity: 0.55; cursor: default; }
-.history-note { font-size: 0.85rem; color: var(--muted, #8a989e); margin: 10px 0 0; max-width: 72ch; }
-.history-note.wake { color: var(--accent, #f2a53c); }
+.source-btn.eh { border-color: var(--eh-pink); color: var(--eh-pink); background: rgba(244, 114, 182, .09); }
+.source-btn.eh:hover { background: rgba(244, 114, 182, .18); }
+.source-btn.eh.on { background: rgba(244, 114, 182, .22); }
+
+/* The picker is an expansion of the header, not a section of the page: it
+   hangs off the button that opened it and closes when it's done. */
+.history {
+  margin: 0 0 1.25rem; padding: 1rem 1.1rem;
+  border: 1px solid var(--eh-pink); border-top: 0;
+  border-radius: 0 0 8px 8px; background: rgba(244, 114, 182, .05);
+}
+.history-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.history-head h2 { margin: 0; font-size: .95rem; color: var(--eh-pink); }
+.history-head button {
+  font: inherit; font-size: .78rem; padding: 6px 11px; border-radius: 6px; cursor: pointer;
+  border: 1px solid var(--eh-pink); background: transparent; color: var(--eh-pink);
+  transition: background .15s;
+}
+.history-head button:hover:not(:disabled) { background: rgba(244, 114, 182, .16); }
+.history-head button:disabled { opacity: .55; cursor: default; }
+.history-note { font-size: .82rem; color: var(--muted, #8a989e); margin: .6rem 0 0; max-width: 74ch; }
+.history-note.wake { color: var(--eh-pink); }
 .history-note.bad { color: #f87171; }
-.history-list { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 8px; }
+.history-list { list-style: none; padding: 0; margin: .9rem 0 0; display: grid; gap: 6px; }
 .history-list button {
   width: 100%; text-align: left; font: inherit; cursor: pointer; display: flex; flex-wrap: wrap;
-  gap: 12px; align-items: baseline; padding: 10px 12px; border-radius: 4px;
-  border: 1px solid var(--line, #2a3439); background: var(--panel, #141c21); color: inherit;
+  gap: .75rem; align-items: baseline; padding: 9px 11px; border-radius: 6px;
+  border: 1px solid var(--border); background: var(--panel); color: inherit;
 }
-.history-list button:hover { border-color: var(--accent, #f2a53c); }
-.hl-when { font-size: 0.75rem; color: var(--muted, #8a989e); font-variant-numeric: tabular-nums; }
+.history-list button:hover { border-color: var(--eh-pink); background: rgba(244, 114, 182, .07); }
+.hl-when { font-size: .72rem; color: var(--muted, #8a989e); font-variant-numeric: tabular-nums; }
 .hl-label { font-weight: 600; }
-.hl-sha { font-size: 0.75rem; color: var(--muted, #8a989e); }
-.hl-faith { font-size: 0.78rem; color: var(--muted, #8a989e); margin-left: auto; }
-.hl-flagged { font-size: 0.72rem; color: #f87171; border: 1px solid currentColor; padding: 1px 6px; border-radius: 3px; }
+.hl-sha { font-size: .72rem; color: var(--eh-pink); }
+.hl-faith { font-size: .76rem; color: var(--muted, #8a989e); margin-left: auto; }
+.hl-flagged { font-size: .7rem; color: #f87171; border: 1px solid currentColor; padding: 1px 6px; border-radius: 3px; }

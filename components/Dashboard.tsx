@@ -15,6 +15,7 @@ export function Dashboard({ initialRun }: { initialRun: EvalRun }) {
   const [error, setError] = useState<string | null>(null);
   const [handedOff, setHandedOff] = useState<string | null>(null);
   const [fromHistory, setFromHistory] = useState<string | null>(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   // If rag-eval-lab sent us a run it just produced in the browser, render that
   // instead of the bundled sample. Same origin, so it comes via localStorage.
@@ -55,6 +56,7 @@ export function Dashboard({ initialRun }: { initialRun: EvalRun }) {
       setRun(parsed);
       setHandedOff(null);
       setFromHistory(label);
+      setShowHistory(false);   // it did its job; get out of the way
       setError(null);
     } catch (err) {
       setError(
@@ -76,11 +78,25 @@ export function Dashboard({ initialRun }: { initialRun: EvalRun }) {
             run: <code>{run.run}</code> · {run.metrics.n_cases} cases
           </p>
         </div>
-        <label className="upload">
-          Load eval_run.json
-          <input type="file" accept="application/json,.json" onChange={onUpload} />
-        </label>
+        {/* Both buttons answer the same question — where does this run come from?
+            — so they live together. The pink one reaches a real server; the
+            colour is eval-history's everywhere it appears. */}
+        <div className="sources">
+          <button
+            className={`source-btn eh${showHistory ? " on" : ""}`}
+            onClick={() => setShowHistory((v) => !v)}
+            aria-expanded={showHistory}
+          >
+            {showHistory ? "Hide stored runs" : "Load from eval-history"}
+          </button>
+          <label className="upload">
+            Load eval_run.json
+            <input type="file" accept="application/json,.json" onChange={onUpload} />
+          </label>
+        </div>
       </header>
+
+      {showHistory && <HistoryPicker onPick={onPickFromHistory} />}
 
       {handedOff && (
         <div className="banner handoff">
@@ -99,8 +115,6 @@ export function Dashboard({ initialRun }: { initialRun: EvalRun }) {
       )}
 
       {error && <div className="banner bad" role="alert">Couldn’t load file: {error}</div>}
-
-      <HistoryPicker onPick={onPickFromHistory} />
 
       <FlaggedBanner flagged={flagged} />
 
