@@ -25,3 +25,26 @@ jobs:
         run: npm run typecheck
       - name: Test
         run: npm test
+
+  # The Dockerfile had never been built by CI. Listing "Docker" as a skill
+  # invites a reader to run `docker build` — so it has to work, and something
+  # other than hope has to say so.
+  docker:
+    name: the image actually builds and serves
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: docker build -t eval-dashboard:ci .
+      - name: It serves the exported site
+        run: |
+          docker run -d --name dash -p 3000:3000 eval-dashboard:ci
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /tmp/page.html -w '%{http_code}' http://localhost:3000/ || true)
+            [ "$code" = "200" ] && break
+            sleep 2
+          done
+          docker logs dash
+          [ "$code" = "200" ] || { echo "::error::image served $code"; exit 1; }
+          grep -qi "eval" /tmp/page.html || { echo "::error::served a page, but not the dashboard"; exit 1; }
+          docker rm -f dash
