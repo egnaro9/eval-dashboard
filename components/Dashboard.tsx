@@ -2,16 +2,19 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { takeHandoff } from "@/lib/handoff";
+import { fetchRunAsEvalRun, HistoryError } from "@/lib/history";
 import { flaggedCases, summaryCards } from "@/lib/metrics";
 import { parseEvalRun, type EvalRun } from "@/lib/schema";
 import { CaseTable } from "./CaseTable";
 import { FlaggedBanner } from "./FlaggedBanner";
+import { HistoryPicker } from "./HistoryPicker";
 import { MetricCard } from "./MetricCard";
 
 export function Dashboard({ initialRun }: { initialRun: EvalRun }) {
   const [run, setRun] = useState<EvalRun>(initialRun);
   const [error, setError] = useState<string | null>(null);
   const [handedOff, setHandedOff] = useState<string | null>(null);
+  const [fromHistory, setFromHistory] = useState<string | null>(null);
 
   // If rag-eval-lab sent us a run it just produced in the browser, render that
   // instead of the bundled sample. Same origin, so it comes via localStorage.
@@ -37,9 +40,30 @@ export function Dashboard({ initialRun }: { initialRun: EvalRun }) {
       const parsed = parseEvalRun(JSON.parse(await file.text()));
       setRun(parsed);
       setHandedOff(null);
+      setFromHistory(null);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "could not parse file");
+    }
+  }
+
+  /** Load a run out of the live service. Same validator as an uploaded file:
+   *  the network is not a more trustworthy source than a stranger's disk. */
+  async function onPickFromHistory(id: string, label: string) {
+    try {
+      const parsed = parseEvalRun(await fetchRunAsEvalRun(id));
+      setRun(parsed);
+      setHandedOff(null);
+      setFromHistory(label);
+      setError(null);
+    } catch (err) {
+      setError(
+        err instanceof HistoryError
+          ? err.message
+          : err instanceof Error
+            ? `stored run didn't match the schema: ${err.message}`
+            : "could not load that run",
+      );
     }
   }
 
@@ -66,7 +90,17 @@ export function Dashboard({ initialRun }: { initialRun: EvalRun }) {
         </div>
       )}
 
+      {fromHistory && (
+        <div className="banner handoff">
+          ⇢ Loaded from{" "}
+          <a href="https://github.com/egnaro9/eval-history">eval-history</a> — a live FastAPI +
+          Postgres service: <strong>{fromHistory}</strong>. This one did round-trip through a server.
+        </div>
+      )}
+
       {error && <div className="banner bad" role="alert">Couldn’t load file: {error}</div>}
+
+      <HistoryPicker onPick={onPickFromHistory} />
 
       <FlaggedBanner flagged={flagged} />
 

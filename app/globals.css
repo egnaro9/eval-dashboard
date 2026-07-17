@@ -71,3 +71,30 @@ table.cases { width: 100%; border-collapse: collapse; font-size: .9rem; }
 
 footer { margin-top: 3rem; color: var(--muted); font-size: .85rem; }
 footer a { color: var(--accent); }
+
+/* ---- stored runs (eval-history) ----
+   The only part of this dashboard that talks to a server. It sleeps on a free
+   tier, so the wake state is a first-class thing to render, not an edge case. */
+.history { margin: 28px 0 8px; border-top: 1px solid var(--line, #2a3439); padding-top: 22px; }
+.history-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.history-head h2 { margin: 0; }
+.history-head button {
+  font: inherit; font-size: 0.85rem; padding: 8px 14px; border-radius: 4px; cursor: pointer;
+  border: 1px solid var(--accent, #f2a53c); background: transparent; color: var(--accent, #f2a53c);
+}
+.history-head button:disabled { opacity: 0.55; cursor: default; }
+.history-note { font-size: 0.85rem; color: var(--muted, #8a989e); margin: 10px 0 0; max-width: 72ch; }
+.history-note.wake { color: var(--accent, #f2a53c); }
+.history-note.bad { color: #f87171; }
+.history-list { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 8px; }
+.history-list button {
+  width: 100%; text-align: left; font: inherit; cursor: pointer; display: flex; flex-wrap: wrap;
+  gap: 12px; align-items: baseline; padding: 10px 12px; border-radius: 4px;
+  border: 1px solid var(--line, #2a3439); background: var(--panel, #141c21); color: inherit;
+}
+.history-list button:hover { border-color: var(--accent, #f2a53c); }
+.hl-when { font-size: 0.75rem; color: var(--muted, #8a989e); font-variant-numeric: tabular-nums; }
+.hl-label { font-weight: 600; }
+.hl-sha { font-size: 0.75rem; color: var(--muted, #8a989e); }
+.hl-faith { font-size: 0.78rem; color: var(--muted, #8a989e); margin-left: auto; }
+.hl-flagged { font-size: 0.72rem; color: #f87171; border: 1px solid currentColor; padding: 1px 6px; border-radius: 3px; }
