@@ -16,7 +16,7 @@ The companion [rag-eval-lab](https://github.com/egnaro9/rag-eval-lab) produces a
 
 - **Strict TypeScript, end to end.** A typed `EvalRun` schema with a runtime `parseEvalRun` validator that rejects malformed uploads (`strict` mode, no `any`).
 - **Interactive.** Ships with a sample run; drop in your own `eval_run.json` and it re-renders client-side.
-- **Tested.** **20 tests** (Vitest + Testing Library) across the pure metric logic, the schema validator, and the React components. **Green CI**, **0 npm-audit vulnerabilities**, and a real `next build`.
+- **Tested.** **29 tests** (Vitest + Testing Library) across the pure metric logic, the schema validator, the history and handoff paths, and the React components. **Green CI**, **0 npm-audit vulnerabilities**, and a real `next build`.
 
 ---
 
@@ -47,7 +47,7 @@ npm run dev        # http://localhost:3000
 ```
 
 ```bash
-npm test           # 20 tests (Vitest + Testing Library)
+npm test           # 29 tests (Vitest + Testing Library)
 npm run typecheck  # tsc --noEmit, strict
 npm run build      # static export -> ./out  (deploy anywhere)
 ```
@@ -76,7 +76,7 @@ Keeping the data-shaping logic in pure, React-free modules is deliberate: those 
 app/            layout, page (validates the bundled sample at build), globals.css
 components/     MetricCard · ScoreBadge · CaseTable · FlaggedBanner · Dashboard
 lib/            schema.ts (types + validator) · metrics.ts (pure logic) · sample.json
-tests/          schema.test.ts · metrics.test.ts · components.test.tsx  (20 tests)
+tests/          schema · metrics · history · handoff · components  (29 tests)
 ```
 
 ---
