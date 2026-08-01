@@ -1,12 +1,12 @@
 # eval-dashboard
 
+**A Next.js + TypeScript dashboard that visualizes RAG evaluation runs and surfaces hallucinations at a glance.**
+
 [![ci](https://github.com/egnaro9/eval-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/egnaro9/eval-dashboard/actions/workflows/ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)](https://www.typescriptlang.org/)
 [![live demo](https://img.shields.io/badge/demo-live-f2a53c)](https://egnaro9.github.io/eval-dashboard/)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-
-**A Next.js + TypeScript dashboard that visualizes RAG evaluation runs and surfaces hallucinations at a glance.**
 
 ### ▶ [Open the live dashboard](https://egnaro9.github.io/eval-dashboard/)
 
