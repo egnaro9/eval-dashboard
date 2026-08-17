@@ -17,8 +17,8 @@ jobs:
           cache: "npm"
       - name: Install
         run: npm ci
-      - name: Audit (informational — clean at commit time)
-        run: npm audit --audit-level=moderate || true
+      - name: Audit (enforced; the README claims zero, so CI must be able to fail)
+        run: npm audit --audit-level=moderate
       - name: Build (static export; also type-checks)
         run: npm run build
       - name: Typecheck

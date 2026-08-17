@@ -70,7 +70,7 @@ Keeping the data-shaping logic in pure, React-free modules is deliberate: those 
 - **Deployed from the same build.** `output: "export"` + an Actions workflow publishes `out/` to GitHub Pages on every push; an opt-in `PAGES_BASE_PATH` supplies the project-site asset prefix so local dev and tests still build at the root.
 - **Why static export?** The dashboard only *reads* a JSON run — there's no server-side work to do. `output: "export"` yields a zero-runtime site that's cheap to host and impossible to break in production. It's also why the CI job runs `next build` (which type-checks) before the standalone `typecheck` — the build generates the App Router route types.
 - **Why a runtime validator in a typed app?** TypeScript types vanish at runtime; an *uploaded* file is untrusted. `parseEvalRun` is the boundary that turns `unknown` JSON into a typed `EvalRun` or a clear error — the same discipline you'd use on any external input.
-- **0 vulnerabilities.** Dependencies are pinned and a `postcss` override pulls the patched transitive version; the CI audit step is informational so a future upstream advisory never silently reddens the badge.
+- **0 vulnerabilities, and CI fails if that stops being true.** `npm audit --audit-level=moderate` runs without `|| true`, so the claim is gated rather than asserted. It was asserted once: the audit step was informational, the README said zero, and by 2026-08-17 the real count was 4 (3 high, 1 moderate) with nothing able to notice. Fixed by upgrading Next 15 to 16 and letting the gate bite.
 
 ```
 app/            layout, page (validates the bundled sample at build), globals.css
