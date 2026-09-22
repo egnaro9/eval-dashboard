@@ -30,10 +30,20 @@ describe("fetchRuns", () => {
     await expect(fetchRuns()).resolves.toEqual([RUN]);
   });
 
-  it("asks the right endpoint with the limit", async () => {
+  it("asks the archive for the whole list — it has no query string", async () => {
     const spy = mockFetch(() => ok([]));
     await fetchRuns(5);
-    expect(spy.mock.calls[0][0]).toBe(`${HISTORY_API}/runs?limit=5`);
+    expect(spy.mock.calls[0][0]).toBe(`${HISTORY_API}/runs.json`);
+  });
+
+  it("applies the limit here, newest first, since the archive cannot", async () => {
+    // The retired service honoured ?limit= and returned newest-first. The static
+    // export is the entire table in file order, so both are this client's job now;
+    // without it the UI would render whatever order the export happened to have.
+    const older = { ...RUN, id: "older", created_at: "2026-01-01T00:00:00Z" };
+    const newer = { ...RUN, id: "newer", created_at: "2026-09-01T00:00:00Z" };
+    mockFetch(() => ok([older, newer]));
+    await expect(fetchRuns(1)).resolves.toEqual([newer]);
   });
 
   it("rejects a run in an unexpected shape rather than passing it on", async () => {
@@ -70,12 +80,12 @@ describe("fetchRunAsEvalRun", () => {
   it("uses /eval_run — the storage shape would fail parseEvalRun", async () => {
     const spy = mockFetch(() => ok({ run: "x", metrics: {}, cases: [] }));
     await fetchRunAsEvalRun("abc123");
-    expect(spy.mock.calls[0][0]).toBe(`${HISTORY_API}/runs/abc123/eval_run`);
+    expect(spy.mock.calls[0][0]).toBe(`${HISTORY_API}/runs/abc123/eval_run.json`);
   });
 
   it("escapes the id rather than pasting it into a URL", async () => {
     const spy = mockFetch(() => ok({}));
     await fetchRunAsEvalRun("a/../b");
-    expect(spy.mock.calls[0][0]).toBe(`${HISTORY_API}/runs/a%2F..%2Fb/eval_run`);
+    expect(spy.mock.calls[0][0]).toBe(`${HISTORY_API}/runs/a%2F..%2Fb/eval_run.json`);
   });
 });
