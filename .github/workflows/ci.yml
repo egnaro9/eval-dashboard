@@ -5,6 +5,13 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  # The audit step below is ungated on purpose, but a gate nothing triggers
+  # cannot go red. Without this, a newly published advisory against an
+  # already-pinned dependency goes unnoticed until somebody happens to push,
+  # so "CI fails if that stops being true" was a claim about a check that
+  # could not fire. Weekly, Monday 07:00 UTC.
+  schedule:
+    - cron: "0 7 * * 1"
 
 jobs:
   build-and-test:
